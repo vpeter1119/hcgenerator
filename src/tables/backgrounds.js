@@ -26,7 +26,7 @@ const backgrounds = new RandomTable([
     new Entry(89,92,"Urban Bounty Hunter"),
     new Entry(93,96,"Urchin"),
     new Entry(97,99,"Uthgardt Tribe Member"),
-    new Entry(100,null,"Waterdhavian Noble"),
+    new Entry(100,100,"Waterdhavian Noble"),
 ]);
 
 module.exports = {

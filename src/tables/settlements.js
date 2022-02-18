@@ -19,7 +19,7 @@ const settlements_dfn = new RandomTable([
     new Entry(61,70,{name: "Ironmaster", type: "Village"}),
     new Entry(71,80,{name: "Mithral Hall", type: "Village"}),
     new Entry(81,99,{name: "Sundabar", type: "City"}),
-    new Entry(100,null,{name: "Thornhold", type: "City"}),
+    new Entry(100,100,{name: "Thornhold", type: "City"}),
 ]);
 
 const settlements_ik = new RandomTable([
@@ -28,7 +28,7 @@ const settlements_ik = new RandomTable([
     new Entry(36,85,{name: "Moonshae Isles", type: "City"}),
     new Entry(86,89,{name: "Orlumbor", type: "Village"}),
     new Entry(90,99,{name: "Southern Isles", type: "Village"}),
-    new Entry(100,null,{name: "Evermeet", type: "City"}),
+    new Entry(100,100,{name: "Evermeet", type: "City"}),
 ]);
 
 const settlements_ir = new RandomTable([

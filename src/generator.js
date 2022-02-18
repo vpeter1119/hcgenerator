@@ -1,6 +1,8 @@
-const { d100 } = require('./dice');
+const { d100, d3 } = require('./dice');
 const { homelands } = require('./tables/homelands');
 const { backgrounds } = require('./tables/backgrounds');
+const { social_status_table } = require('./tables/social');
+const { ally_relationships, rival_relationships } = require('./tables/alliesrivals');
 const { 
     settlements_la,
     settlements_dfn,
@@ -10,7 +12,8 @@ const {
 } = require('./tables/settlements');
 const {
     family_size_village,
-    family_size_city
+    family_size_city,
+    family_relationships
 } = require('./tables/families');
 
 class HeroicChronicle {
@@ -36,7 +39,9 @@ class HeroicChronicle {
                 this.generateBackground(),
                 this.generateSettlement(),
                 this.generateRace(),
-                this.generateFamily()
+                this.generateFamily(),
+                this.generateFamilyRelationships(),
+                this.generateAlliesAndRivals(),
             ])
             .then(() => {
                 resolve(this.text);
@@ -59,6 +64,7 @@ class HeroicChronicle {
         const roll = d100.roll();
         let bg = backgrounds.select(roll);
         this.data.background = bg;
+        this.data.social = social_status_table[this.data.background][this.data.homeland];
         this.log(`Roll: ${roll} (${bg})`);
         this.text += `Background: ${bg}\n`;
         return this.text;
@@ -75,7 +81,7 @@ class HeroicChronicle {
             case "Dwarfholds of the North":
                 settlement = settlements_dfn.select(roll);
                 break;
-            case "Island Nations":
+            case "Island Kingdoms":
                 settlement = settlements_ik.select(roll);
                 break;
             case "Independent Realms":
@@ -114,6 +120,49 @@ class HeroicChronicle {
         this.data.family = family;
         this.text += `Family: ${family.parents} parent(s), ${family.siblings} sibling(s)\n`;
         return family;
+    }
+
+    async generateFamilyRelationships() {
+        this.log('Generating family relationships...');
+        const relationshipsCount = d3.roll();
+        this.log(`${relationshipsCount} family relationship(s) will be rolled`);
+        let relationships = [];
+        this.text += `Family relationships: \n`
+        for (let index = 0; index < relationshipsCount; index++) {
+            const roll = d100.roll();
+            let rel = family_relationships.select(roll);
+            this.log(`Family relationships roll #${index+1} = ${roll}: ${rel.text}(${rel.type})`);
+            relationships.push(rel);
+            this.text += `\t*(${rel.type}) ${rel.text}\n`;
+            if (index == relationshipsCount-1) this.data.family.relationships = relationships;
+            if (rel.type == 'Ally') {
+                this.data.social.allies++;
+            } else if (rel.type == 'Rival') {
+                this.data.social.rivals++;
+            }
+        }
+        return relationships;
+    }
+
+    async generateAlliesAndRivals() {
+        this.log('Generating allies and rivals...');
+        this.text += `Allies: ${this.data.social.allies}\n`;
+        this.data.allies = [];
+        for (let index = 0; index < this.data.social.allies; index++) {
+            const roll = d100.roll();
+            let ally = ally_relationships.select(roll);
+            this.data.allies.push(ally);
+            this.text += `\t*${ally}\n`;
+        }
+        this.text += `Rivals: ${this.data.social.rivals}\n`;
+        this.data.rivals = [];
+        for (let index = 0; index < this.data.social.rivals; index++) {
+            const roll = d100.roll();
+            let rival = rival_relationships.select(roll);
+            this.data.rivals.push(rival);
+            this.text += `\t*${rival}\n`;
+        }
+        return true;
     }
 }
 

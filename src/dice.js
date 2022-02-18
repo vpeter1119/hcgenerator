@@ -13,6 +13,7 @@ class Dice {
     }
 }
 
+const d3 = new Dice(3);
 const d4 = new Dice(4);
 const d6 = new Dice(6);
 const d8 = new Dice(8);
@@ -23,6 +24,7 @@ const d100 = new Dice(100);
 
 module.exports = {
     Dice,
+    d3,
     d4,
     d6,
     d8,
