@@ -33,6 +33,8 @@ class HeroicChronicle {
     }
 
     generate() {
+        this.text += `Player: <write your name here>`;
+        this.text += `Name: <write the character's name here>`;
         return new Promise((resolve) => {
             Promise.all([
                 this.generateHomeland(),
@@ -96,7 +98,7 @@ class HeroicChronicle {
         }
         this.data.settlement = settlement;
         this.log(`Roll: ${roll} (${settlement.name}, ${settlement.type})`);
-        this.text += `Settlement: ${settlement.name} (${settlement.type})\n`;
+        this.text += `Settlement: ${settlement.name}\n`;
         return this.text;
     }
 
@@ -127,7 +129,7 @@ class HeroicChronicle {
         const relationshipsCount = d3.roll();
         this.log(`${relationshipsCount} family relationship(s) will be rolled`);
         let relationships = [];
-        this.text += `Family relationships: \n`
+        this.text += `Family relationships (${relationshipsCount}):\n`
         for (let index = 0; index < relationshipsCount; index++) {
             const roll = d100.roll();
             let rel = family_relationships.select(roll);
@@ -146,19 +148,21 @@ class HeroicChronicle {
 
     async generateAlliesAndRivals() {
         this.log('Generating allies and rivals...');
-        this.text += `Allies: ${this.data.social.allies}\n`;
+        this.text += `Allies (${this.data.social.allies}):\n`;
         this.data.allies = [];
         for (let index = 0; index < this.data.social.allies; index++) {
             const roll = d100.roll();
             let ally = ally_relationships.select(roll);
+            this.log(`Ally roll #${index+1} = ${roll}: ${ally}`);
             this.data.allies.push(ally);
             this.text += `\t*${ally}\n`;
         }
-        this.text += `Rivals: ${this.data.social.rivals}\n`;
+        this.text += `Rivals (${this.data.social.rivals}):\n`;
         this.data.rivals = [];
         for (let index = 0; index < this.data.social.rivals; index++) {
             const roll = d100.roll();
             let rival = rival_relationships.select(roll);
+            this.log(`Rival roll #${index+1} = ${roll}: ${rival}`);
             this.data.rivals.push(rival);
             this.text += `\t*${rival}\n`;
         }
