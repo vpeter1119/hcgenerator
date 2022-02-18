@@ -17,7 +17,9 @@ const {
 } = require('./tables/families');
 
 class HeroicChronicle {
-    constructor() {
+    constructor(config) {
+        this.playerName = config.player;
+        this.characterName = config.character;
         this.text = '\n=== HEROIC CHRONICLE ===\n';
         this.data = {};
         this.logString = '';
@@ -33,8 +35,8 @@ class HeroicChronicle {
     }
 
     generate() {
-        this.text += `Player: <write your name here>`;
-        this.text += `Name: <write the character's name here>`;
+        this.text += `Player: ${this.playerName}\n`;
+        this.text += `Name: ${this.characterName}\n`;
         return new Promise((resolve) => {
             Promise.all([
                 this.generateHomeland(),

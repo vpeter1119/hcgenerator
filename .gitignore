@@ -1,2 +1,3 @@
 *.txt
 builds/
+node_modules/
